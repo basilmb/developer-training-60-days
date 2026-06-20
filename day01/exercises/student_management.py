@@ -17,7 +17,7 @@ class Student:
         elif self.average_mark >= 60:
             self.grade = "B"
         elif self.average_mark >= 40:
-            self.grade =  "c"
+            self.grade =  "C"
         elif self.average_mark >= 20:
             self.grade = "D"
         else:
@@ -59,10 +59,10 @@ while status=="true":
                 break
             print("Mark must be between 0-100")
             
-    student_name = Student(student_name, course_name, mark_list)
-    student_name.calculate_average()
-    student_name.calculate_grade()
-    student_name.display_student()
+    student = Student(student_name, course_name, mark_list)
+    student.calculate_average()
+    student.calculate_grade()
+    student.display_student()
 
     while True:
         option = input("\nClick Corresponding Number\n1. Add More Subject\n2. Add More Students.\n3. Display All Students.\n4. Dasplay Top Student.\n5. Exit.\n")
