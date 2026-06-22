@@ -29,23 +29,7 @@ class Student:
             print(f" {key}: {value}")
         print(f" Average: {self.average_mark:.2f}\n Grade: {self.grade}")
         
-subjects = ["Maths", "Python", "English"]    
-
-while True:    
-    print("Subjects in the Student Management are: ", subjects)
-    choice = input("Do you Want to Add More Subjects (y/n)?: ")
-    if choice not in ["y", "n"]:
-        print("Invalid Entry")
-
-    if choice == "y":
-        subjects.append(input("Enter new Subject: "))
-    else:
-        print("Enter Students Details")
-        break
-        
-status="true"
-       
-while status=="true":
+def add_student(subjects):
     student_name = input("enter student name: ")
     course_name = input("enter course name: ")
     mark_list = {}
@@ -63,6 +47,24 @@ while status=="true":
     student.calculate_average()
     student.calculate_grade()
     student.display_student()
+        
+def main():
+        
+    subjects = ["Maths", "Python", "English"]    
+
+    while True:    
+        print("Subjects in the Student Management are: ", subjects)
+        choice = input("Do you Want to Add More Subjects (y/n)?: ")
+        if choice not in ["y", "n"]:
+            print("Invalid Entry")
+
+        if choice == "y":
+            subjects.append(input("Enter new Subject: "))
+        else:
+            print("Enter Students Details")
+            break
+        
+    add_student(subjects)
 
     while True:
         option = input("\nClick Corresponding Number\n1. Add More Subject\n2. Add More Students.\n3. Display All Students.\n4. Dasplay Top Student.\n5. Exit.\n")
@@ -72,25 +74,22 @@ while status=="true":
             case "1":
                 new_sub = input("Enter the Subject to Add: ")
                 subjects.append(new_sub)
-                for student_obj in Student.all_instances:
-                    new_mark = input(f"mark in {new_sub} for {student_obj.student_name}: ")
-                    student_obj.mark_list[new_sub] = new_mark
-                status="fail"
-                continue
+                for student in Student.all_instances:
+                    new_mark = int(input(f"mark in {new_sub} for {student.student_name}: "))
+                    student.mark_list[new_sub] = new_mark
+                    student.calculate_average()
+                    student.calculate_grade()
             case "2":
-                status="true"
-                break
+                add_student(subjects)
             case "3":
                 for student_obj in Student.all_instances:
                     student_obj.display_student()
-                status="fail"
-                continue
             case "4":
                 top_student = max(Student.all_instances, key = lambda student: student.average_mark)
                 top_student.display_student()
-                status="fail"
-                continue
             case "5":
-                print("Exiting from Student Mansagement")
-                status="fail"
+                print("Exiting from Student Management")
                 break
+            
+if __name__ == "__main__":
+    main()
