@@ -1,10 +1,24 @@
+import json
+
+def sava_student(filename = "student.json"):
+    data_list = [student.to_dict() for student in Student.all_instances]
+    
+    try:
+        with open(filename, "w") as file:
+            json.dump(data_list, file, indent=4)
+            print(f"successfully saved {len(data_list)} students to {filename}")
+    except Exception as e:
+        print(f"an error occurred while saving {e}")
+
 class Student:
     all_instances = []
     
     def __init__(self, name, course, mark):
         self.student_name = name
-        self.course_name = course
+        self.course_name = course            
         self.mark_list = dict(mark)
+        self.average_mark = 0.0
+        self.grade = "F"
         
         Student.all_instances.append(self)
 
@@ -28,6 +42,15 @@ class Student:
         for key, value in self.mark_list.items():
             print(f" {key}: {value}")
         print(f" Average: {self.average_mark:.2f}\n Grade: {self.grade}")
+        
+    def to_dict(self):
+        return{
+            "studen_name": self.student_name,
+            "course_name": self.course_name,
+            "mark_list": self.mark_list,
+            "average" : self.average_mark,
+            "grade" : self.grade
+        }
         
 def add_student(subjects):
     student_name = input("enter student name: ")
@@ -67,7 +90,7 @@ def main():
     add_student(subjects)
 
     while True:
-        option = input("\nClick Corresponding Number\n1. Add More Subject\n2. Add More Students.\n3. Display All Students.\n4. Dasplay Top Student.\n5. Exit.\n")
+        option = input("\nClick Corresponding Number\n1. Add More Subject\n2. Add More Students.\n3. Display All Students.\n4. Dasplay Top Student. \n5. Save as Backup\n6. Exit.\n")
         if option not in ["1", "2", "3", "4", "5"]:
             print("Invalid Selection")    
         match option:
@@ -83,11 +106,15 @@ def main():
                 add_student(subjects)
             case "3":
                 for student_obj in Student.all_instances:
+                    print(student_obj)
                     student_obj.display_student()
             case "4":
                 top_student = max(Student.all_instances, key = lambda student: student.average_mark)
                 top_student.display_student()
             case "5":
+                sava_student("backup.json")
+            case "6":
+                sava_student()
                 print("Exiting from Student Management")
                 break
             

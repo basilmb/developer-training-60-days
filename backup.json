@@ -1,0 +1,24 @@
+[
+    {
+        "studen_name": "basil",
+        "course_name": "bca",
+        "mark_list": {
+            "Maths": 75,
+            "Python": 80,
+            "English": 90
+        },
+        "average": 81.66666666666667,
+        "grade": "A"
+    },
+    {
+        "studen_name": "nabeel",
+        "course_name": "bca",
+        "mark_list": {
+            "Maths": 60,
+            "Python": 75,
+            "English": 85
+        },
+        "average": 73.33333333333333,
+        "grade": "B"
+    }
+]
