@@ -1,4 +1,5 @@
 import json
+import os
 
 def sava_student(filename = "student.json"):
     data_list = [student.to_dict() for student in Student.all_instances]
@@ -9,6 +10,20 @@ def sava_student(filename = "student.json"):
             print(f"successfully saved {len(data_list)} students to {filename}")
     except Exception as e:
         print(f"an error occurred while saving {e}")
+        
+def load_json(filename="student.json"):
+    if not os.path.exists(filename):
+        print("No previous student database found.")
+    try:
+        with open(filename, "r") as file:
+            data_list = json.load(file)
+        for data in data_list:
+            student = Student(name=data["student_name"], course=data["course_name"], mark=data["mark_list"])
+            student.average_mark = data["average_mark"]
+            student.grade = data["grade"]
+        print(f"Successfully loaded {len(Student.all_instances)} students from {filename}")
+    except Exception as e:
+        print(f"[Warning] Error loading database: {e}.")
 
 class Student:
     all_instances = []
@@ -48,7 +63,7 @@ class Student:
             "studen_name": self.student_name,
             "course_name": self.course_name,
             "mark_list": self.mark_list,
-            "average" : self.average_mark,
+            "average_mark" : self.average_mark,
             "grade" : self.grade
         }
         
@@ -72,6 +87,7 @@ def add_student(subjects):
     student.display_student()
         
 def main():
+    load_json()
         
     subjects = ["Maths", "Python", "English"]    
 
@@ -90,7 +106,7 @@ def main():
     add_student(subjects)
 
     while True:
-        option = input("\nClick Corresponding Number\n1. Add More Subject\n2. Add More Students.\n3. Display All Students.\n4. Dasplay Top Student. \n5. Save as Backup\n6. Exit.\n")
+        option = input("\nClick Corresponding Number\n1. Add More Subject\n2. Add More Students.\n3. Display All Students.\n4. Dasplay Top Student.\n5. Exit.\n")
         if option not in ["1", "2", "3", "4", "5"]:
             print("Invalid Selection")    
         match option:
@@ -112,8 +128,6 @@ def main():
                 top_student = max(Student.all_instances, key = lambda student: student.average_mark)
                 top_student.display_student()
             case "5":
-                sava_student("backup.json")
-            case "6":
                 sava_student()
                 print("Exiting from Student Management")
                 break
