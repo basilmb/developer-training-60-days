@@ -3,22 +3,22 @@
         "student_name": "basil",
         "course_name": "bca",
         "mark_list": {
-            "Maths": 60,
-            "Python": 70,
-            "English": 80
+            "maths": 80,
+            "python": 90,
+            "english": 80
         },
-        "average_mark": 70.0,
-        "grade": "B"
+        "average_mark": 83.33333333333333,
+        "grade": "A"
     },
     {
         "student_name": "nabeel",
         "course_name": "bca",
         "mark_list": {
-            "Maths": 40,
-            "Python": 50,
-            "English": 30
+            "maths": 45,
+            "python": 65,
+            "english": 75
         },
-        "average_mark": 40.0,
-        "grade": "C"
+        "average_mark": 61.666666666666664,
+        "grade": "B"
     }
 ]
