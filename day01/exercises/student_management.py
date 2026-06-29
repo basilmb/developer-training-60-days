@@ -1,7 +1,7 @@
 import json
 import os
 
-def sava_student(filename = "student.json"):
+def save_student(filename = "student.json"):
     data_list = [student.to_dict() for student in Student.all_instances]
     
     try:
@@ -14,6 +14,7 @@ def sava_student(filename = "student.json"):
 def load_json(filename="student.json"):
     if not os.path.exists(filename):
         print("No previous student database found.")
+        return
     try:
         with open(filename, "r") as file:
             data_list = json.load(file)
@@ -21,9 +22,22 @@ def load_json(filename="student.json"):
             student = Student(name=data["student_name"], course=data["course_name"], mark=data["mark_list"])
             student.average_mark = data["average_mark"]
             student.grade = data["grade"]
-        print(f"Successfully loaded {len(Student.all_instances)} students from {filename}")
+        print(f"\nSuccessfully loaded {len(Student.all_instances)} students from {filename}")
     except Exception as e:
         print(f"[Warning] Error loading database: {e}.")
+        
+def find_student(name):
+    for student in Student.all_instances:
+        if name.strip().lower() == student.student_name.strip().lower():
+            return student
+    return None
+
+def delete_student(name):
+    student = find_student(name)
+    if student:
+        Student.all_instances.remove(student)
+        return True
+    return False
 
 class Student:
     all_instances = []
@@ -60,7 +74,7 @@ class Student:
         
     def to_dict(self):
         return{
-            "studen_name": self.student_name,
+            "student_name": self.student_name,
             "course_name": self.course_name,
             "mark_list": self.mark_list,
             "average_mark" : self.average_mark,
@@ -89,27 +103,22 @@ def add_student(subjects):
 def main():
     load_json()
         
-    subjects = ["Maths", "Python", "English"]    
-
-    while True:    
-        print("Subjects in the Student Management are: ", subjects)
-        choice = input("Do you Want to Add More Subjects (y/n)?: ")
-        if choice not in ["y", "n"]:
-            print("Invalid Entry")
-
-        if choice == "y":
-            subjects.append(input("Enter new Subject: "))
-        else:
-            print("Enter Students Details")
-            break
-        
-    add_student(subjects)
+    subjects = ["Maths", "Python", "English"]
 
     while True:
-        option = input("\nClick Corresponding Number\n1. Add More Subject\n2. Add More Students.\n3. Display All Students.\n4. Dasplay Top Student.\n5. Exit.\n")
-        if option not in ["1", "2", "3", "4", "5"]:
-            print("Invalid Selection")    
-        match option:
+        print("\nClick Corresponding Number")
+        print("1. Add More Subject")
+        print("2. Add More Students.")
+        print("3. Display All Students.")
+        print("4. Display Top Student.")
+        print("5. Search Student.")
+        print("6. Delete Student.")
+        print("7. Exit.")
+        choice = input("Enter choice: ").strip()        
+        if choice not in ["1", "2", "3", "4", "5","6","7"]:
+            print("Invalid choice!")
+            continue    
+        match choice:
             case "1":
                 new_sub = input("Enter the Subject to Add: ")
                 subjects.append(new_sub)
@@ -122,14 +131,32 @@ def main():
                 add_student(subjects)
             case "3":
                 for student_obj in Student.all_instances:
-                    print(student_obj)
                     student_obj.display_student()
             case "4":
                 top_student = max(Student.all_instances, key = lambda student: student.average_mark)
                 top_student.display_student()
             case "5":
-                sava_student()
-                print("Exiting from Student Management")
+                search_name = input("Enter student name to search: ")
+                target_student = find_student(search_name)
+                if target_student:
+                    print("\nStudent Found:")
+                    target_student.display_student()
+                else:
+                    print(f"\nStudent '{search_name}' not found in the database.")
+            case "6":
+                delete_name = input("Enter student name to delete: ")
+                confirm = input(f"Are you sure you want to permanently delete '{delete_name}'? (y/n): ")
+                if confirm.lower() == "y":
+                    deleted_student = delete_student(delete_name)
+                    if deleted_student:
+                        print(f"\nSuccessfully deleted '{delete_name}' from the database.")
+                    else:
+                        print(f"\nStudent '{delete_name}' not found.")
+                else:
+                    print("\nDeletion canceled.")
+            case "7":
+                save_student()
+                print("Exiting from Student Management. Goodbye!")
                 break
             
 if __name__ == "__main__":
